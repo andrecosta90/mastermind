@@ -49,11 +49,11 @@ class ComputerPlayer < Player
 
   def make_guess
     # TODO: Implement min-max algorithm
-    @colors.sample(n_holes)
+    n_holes.times.map { @colors.sample }
   end
 
   def create_secret_code
-    @colors.sample(n_holes)
+    n_holes.times.map { @colors.sample }
   end
 
   def to_s
