@@ -22,6 +22,7 @@ class HumanPlayer < Player
   end
 
   def create_secret_code
+    print 'Create a secret code: '
     read_data
   end
 
@@ -49,6 +50,7 @@ class ComputerPlayer < Player
 
   def make_guess
     # TODO: Implement min-max algorithm
+    sleep(3)
     n_holes.times.map { @colors.sample }
   end
 
