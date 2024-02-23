@@ -54,6 +54,7 @@ class ComputerPlayer < Player
 
   def create_secret_code
     n_holes.times.map { @colors.sample }
+    # ["1", "2", "3", "4"]
   end
 
   def to_s
