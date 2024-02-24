@@ -5,15 +5,17 @@ require './mastermind'
 n_rounds = 12
 n_colors = 6
 n_holes = 4
+game = Mastermind.new(n_rounds, n_colors, n_holes)
 
 loop do
   puts 'Do you wanna be a:'
   puts "\t1 - Codemaker ?"
   puts "\t2 - Codebreaker ?"
   option = gets.chomp.to_i
+  # option = 1
 
   human = HumanPlayer.new('human')
-  computer = ComputerPlayer.new('computer', n_colors, n_holes)
+  computer = ComputerPlayer.new('computer', game)
   if [1, 2].include?(option)
     if option == 1
       codemaker = human
@@ -24,7 +26,7 @@ loop do
     end
     puts "\nCodemaker = #{codemaker}\n"
     puts "Codebreaker = #{codebreaker}\n\n"
-    game = Mastermind.new(n_rounds, n_colors, n_holes)
+
     game.run(codemaker, codebreaker)
     # break
   else

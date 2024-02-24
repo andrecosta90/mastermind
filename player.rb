@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'pry-byebug'
 require './roles'
 
 class Player
@@ -9,6 +10,12 @@ class Player
 
   def initialize(name)
     @name = name
+    @last_guess_code = { guess_code: nil, score: nil }
+  end
+
+  def memory_update!(guess_code, score)
+    @last_guess_code[:guess_code] = guess_code
+    @last_guess_code[:score] = score.sum
   end
 
   def to_s
@@ -38,28 +45,38 @@ class HumanPlayer < Player
 end
 
 class ComputerPlayer < Player
-  attr_reader :n_colors, :n_holes, :colors
+  attr_reader :game
 
-  def initialize(name, n_colors, n_holes)
+  def initialize(name, game)
     super(name)
-    @n_colors = n_colors
-    @n_holes = n_holes
-
-    @colors = (1..n_colors).map(&:to_s)
+    @game = game
+    @colors = (1..game.n_colors).map(&:to_s)
+    @candidates = @colors.repeated_permutation(game.n_holes).to_a
   end
 
   def make_guess
-    # TODO: Implement min-max algorithm
-    sleep(3)
-    n_holes.times.map { @colors.sample }
+    # TODO: Implement Knuth's algorithm
+    # 1. need the last guess_code
+    # 2. need the last score
+    # 3. neet the fitness method
+    sleep(2)
+    return %w[1 1 2 2] if @last_guess_code[:score].nil?
+
+    new_candidates = []
+    @candidates.each do |candidate|
+      if @last_guess_code[:score] == game.fitness(candidate, @last_guess_code[:guess_code]).sum
+        new_candidates.push(candidate)
+      end
+    end
+    @candidates = new_candidates
+    @candidates[0]
   end
 
   def create_secret_code
-    n_holes.times.map { @colors.sample }
-    # ["1", "2", "3", "4"]
+    game.n_holes.times.map { @colors.sample }
   end
 
   def to_s
-    "COMPUTER :: #{super} || n_colors=#{n_colors} ; n_holes=#{n_holes}"
+    "COMPUTER :: #{super} || n_colors=#{game.n_colors} ; n_holes=#{game.n_holes}"
   end
 end
