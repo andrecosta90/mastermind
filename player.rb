@@ -1,8 +1,16 @@
 # frozen_string_literal: true
 
-require 'pry-byebug'
+# This file defines the Player classes for a code-breaking game.
+# It includes modules for creating secret codes and making guesses,
+# and defines both a human player and a computer player.
+#
+# Usage:
+#   - Instantiate a HumanPlayer or ComputerPlayer object with a name.
+#   - Call make_guess to make a guess or create_secret_code to create a secret code.
+#
 require './roles'
 
+# The Player class represents a generic player in the game.
 class Player
   include CodeMaker
   include CodeBreaker
@@ -23,6 +31,7 @@ class Player
   end
 end
 
+# The HumanPlayer class represents a human player in the game.
 class HumanPlayer < Player
   def make_guess
     read_data
@@ -44,6 +53,7 @@ class HumanPlayer < Player
   end
 end
 
+# The ComputerPlayer class represents a computer player in the game.
 class ComputerPlayer < Player
   attr_reader :game
 
@@ -54,8 +64,9 @@ class ComputerPlayer < Player
     @candidates = @colors.repeated_permutation(game.n_holes).to_a
   end
 
+  # Makes a guess using the Knuth algorithm.
   def make_guess
-    sleep(2)
+    sleep(1)
     return %w[1 1 2 2] if @last_guess_code[:score].nil?
 
     knuth_algorithm
@@ -71,6 +82,7 @@ class ComputerPlayer < Player
 
   private
 
+  # Implements the Knuth algorithm for making guesses.
   def knuth_algorithm
     new_candidates = []
     @candidates.each do |candidate|

@@ -1,41 +1,61 @@
 # frozen_string_literal: true
 
+# Mastermind Game
+#
+# This script allows you to play the Mastermind game in the terminal. You can choose to be the
+# Codemaker or the Codebreaker. The Codemaker sets a secret code, and the Codebreaker tries to
+# guess the code based on feedback provided by the Codemaker. The game continues for a specified
+# number of rounds.
+#
+# To play the game, run this script in a Ruby environment.
+#
+# Example usage:
+#   $ ruby main.rb
+#
 require './mastermind'
+
+def print_options
+  puts 'Do you want to be:'
+  puts '  1 - Codemaker'
+  puts '  2 - Codebreaker'
+end
+
+def choose_role
+  print_options
+  print 'Choose an option: '
+  gets.chomp.to_i
+end
+
+def setup_game(n_rounds, n_colors, n_holes)
+  game = Mastermind.new(n_rounds, n_colors, n_holes)
+  human = HumanPlayer.new('human')
+  computer = ComputerPlayer.new('computer', game)
+  [game, human, computer]
+end
+
+def assign_roles(option, human, computer)
+  codemaker, codebreaker = option == 1 ? [human, computer] : [computer, human]
+  puts "\nYou chose to be #{option == 1 ? 'CODEMAKER' : 'CODEBREAKER'}\n\n"
+  [codemaker, codebreaker]
+end
+
+def play_game(game, human, computer)
+  loop do
+    option = choose_role
+    if [1, 2].include?(option)
+
+      codemaker, codebreaker = assign_roles(option, human, computer)
+      game.run(codemaker, codebreaker)
+      break
+    else
+      puts 'Invalid option. Please choose 1 or 2.'
+    end
+  end
+end
 
 n_rounds = 12
 n_colors = 6
 n_holes = 4
-game = Mastermind.new(n_rounds, n_colors, n_holes)
 
-loop do
-  puts 'Do you wanna be a:'
-  puts "\t1 - Codemaker ?"
-  puts "\t2 - Codebreaker ?"
-  option = gets.chomp.to_i
-  # option = 1
-
-  human = HumanPlayer.new('human')
-  computer = ComputerPlayer.new('computer', game)
-  if [1, 2].include?(option)
-    if option == 1
-      codemaker = human
-      codebreaker = computer
-    else
-      codemaker = computer
-      codebreaker = human
-    end
-    puts "\nCodemaker = #{codemaker}\n"
-    puts "Codebreaker = #{codebreaker}\n\n"
-
-    game.run(codemaker, codebreaker)
-    # break
-  else
-    puts 'Invalid option'
-  end
-end
-
-# player1 = ComputerPlayer.new('player 1', n_colors, n_holes)
-# player2 = HumanPlayer.new('player 2')
-
-# game = Mastermind.new(n_rounds, n_colors, n_holes)
-# game.run(player1, player2)
+game, human, computer = setup_game(n_rounds, n_colors, n_holes)
+play_game(game, human, computer)
