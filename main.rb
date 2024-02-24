@@ -58,4 +58,8 @@ n_colors = 6
 n_holes = 4
 
 game, human, computer = setup_game(n_rounds, n_colors, n_holes)
+puts "=== SETUP GAME ===\n\n"
+puts ">> SELECT #{n_holes} VALUES FROM THE RANGE OF 1 TO #{n_colors}."
+puts "\n=================\n\n"
+
 play_game(game, human, computer)
