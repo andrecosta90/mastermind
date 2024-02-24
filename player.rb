@@ -55,21 +55,10 @@ class ComputerPlayer < Player
   end
 
   def make_guess
-    # TODO: Implement Knuth's algorithm
-    # 1. need the last guess_code
-    # 2. need the last score
-    # 3. neet the fitness method
     sleep(2)
     return %w[1 1 2 2] if @last_guess_code[:score].nil?
 
-    new_candidates = []
-    @candidates.each do |candidate|
-      if @last_guess_code[:score] == game.fitness(candidate, @last_guess_code[:guess_code]).sum
-        new_candidates.push(candidate)
-      end
-    end
-    @candidates = new_candidates
-    @candidates[0]
+    knuth_algorithm
   end
 
   def create_secret_code
@@ -78,5 +67,18 @@ class ComputerPlayer < Player
 
   def to_s
     "COMPUTER :: #{super} || n_colors=#{game.n_colors} ; n_holes=#{game.n_holes}"
+  end
+
+  private
+
+  def knuth_algorithm
+    new_candidates = []
+    @candidates.each do |candidate|
+      if @last_guess_code[:score] == game.fitness(candidate, @last_guess_code[:guess_code]).sum
+        new_candidates.push(candidate)
+      end
+    end
+    @candidates = new_candidates
+    @candidates[0]
   end
 end
